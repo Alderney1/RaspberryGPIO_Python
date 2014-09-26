@@ -37,4 +37,5 @@ def log(msg, log_level=LOG_LEVEL):
     if log_level <= LOG_LEVEL:
         print(str(log_level) + ' : ' + FILE + '.py::' + traceback.extract_stack()[-2][2] + ' : ' + msg)
 log_level = 2
-igpio = I_GPIO(name='test_GPIO',log_level=log_level)
+setup_file = '/GPIO_setup/debuggingModule_pins_setup.txt'
+igpio = I_GPIO(setup_file=setup_file,name='test_GPIO',log_level=log_level)

@@ -1,7 +1,9 @@
 """
 Module for class to handle Raspberry Pi GPIO. It is the interface to the psysically world.
 """
-
+#--------------------------------------------------------------------
+#Administration Details
+#--------------------------------------------------------------------
 __author__ = "Mats Larse"
 __copyright__ = "Mats Larsen 2014"
 __credits__ = ["Mats Larsen"]
@@ -9,13 +11,29 @@ __license__ = "GPLv3"
 __maintainer__ = "Mats Larsen"
 __email__ = "larsen.mats.87@gmail.com"
 __status__ = "Development"
-
+__description__ = "Module for generic class to handle uart of a given intance. It makes a conenction to transmit data and recieve data. The setup of the uart are baudrate, start bits/no start bits, length of data bits and stop bits/no stop bits."
+__file__ = "gpio.py"
+__class__ ="IGPIO"
+__dependencies__ = ["DisplayMsg"]
+#--------------------------------------------------------------------
+#Version
+#--------------------------------------------------------------------
+__version_stage__ = "Pre_alpha"
+__version_number__ = "0.1"
+__version_date__ = "20140917"
+__version_risk__ = "This current version is in Pre-alpha version, which meaning that the program can crash or perform other unrespected behavoiurs."
+__version_modification__ = "The development project has just been created."
+__version_next_update__ = "Implementation of connection."
+#--------------------------------------------------------------------
+#Hardware
+#--------------------------------------------------------------------
 #--------------------------------------------------------------------
 #Import
 #--------------------------------------------------------------------
 from error_display import ErrorDislay as ED # Library to display errors
 import RPi.GPIO as GPIO # to rasperberry gpio library
 import traceback
+import os.path # Platform-independent manipulation of file names
 #--------------------------------------------------------------------
 #CONSTANTS
 #--------------------------------------------------------------------
@@ -23,8 +41,6 @@ LOG_LEVEL = 2 # Information level
 LOG_ALWAYS = 3 # Always log data
 ON = 1 # ON is meaning that led is be on(light)
 OFF = 1 # OFF is meaning that led is be off(no light)
-FILE = "gpio" # Name of the file
-CLASS = 'I_GPIO'
 GPIO_RISING = 'GPIO_RISING'
 GPIO_FALLING = 'GPIO_FALLING'
 GPIO_BOTH = 'GPIO_BOTH'
@@ -57,20 +73,34 @@ class I_GPIO(object):
         def __repr__(self):
             return self._message
 
-    def __init__(self,name=None, log_level=None):
+    class GPIOData(object):
+        """
+        This class contain the data for a specific GPIO, e.q. if the GPIO is busy or not.
+        """
+        def __init__(self,name,operation):
+            """
+            Constructor of the GPIO Data.
+            """
+            self._name = name # Name of the given GPIO.
+            self._ilde = True # True is when the GPIO is in use.
+            self._operation = operation # A description of the GPIO
+
+    def __init__(self,setup_file=None,**kwargs):
         """
         The constructor of the I_GPIO, where it setup of the interface.
         """
+        
         self.__ed = ED(name='Error_GPIO',log_level=log_level)
-        if name == str:
-            self._name = name # name of this instance
+        if kwargs[name] == str:
+            self._name = kwargs[name]  # name of this instance
         elif name == None:
-            
+            pass
             
         self._log_level = log_level # Level of information
         """ARtibutes"""
         self._error_msg = WORKING # Indicate that the intance is worling fine.
         GPIO.setmode(GPIO.BOARD)
+        self._pins[26]
 
     
     def gpio_setup(self,pin=8,io='OUTPUT',pull_up_down='DOWN'):
