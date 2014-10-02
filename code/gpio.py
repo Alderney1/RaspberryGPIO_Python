@@ -30,7 +30,7 @@ __version_next_update__ = "Implementation of connection."
 #--------------------------------------------------------------------
 #Import
 #--------------------------------------------------------------------
-from error_display import ErrorDislay as ED # Library to display errors
+#from error_display import ErrorDislay as ED # Library to display errors
 import RPi.GPIO as GPIO # to rasperberry gpio library
 import traceback
 import os.path # Platform-independent manipulation of file names
@@ -65,14 +65,6 @@ class I_GPIO(object):
     """
     Class for handling properties of the GPIO's.
     """
-    class Error(Exception):
-        """Exception class."""
-        def __init__(self, message):
-            self._message = message
-            Exception.__init__(self, self._message)
-        def __repr__(self):
-            return self._message
-
     class GPIOData(object):
         """
         This class contain the data for a specific GPIO, e.q. if the GPIO is busy or not.
@@ -88,19 +80,24 @@ class I_GPIO(object):
     def __init__(self,setup_file=None,**kwargs):
         """
         The constructor of the I_GPIO, where it setup of the interface.
+        Inputs:
+        name-> Str : Describe the name of the instance.
         """
+        #Argument assignment
         
-        self.__ed = ED(name='Error_GPIO',log_level=log_level)
-        if kwargs[name] == str:
-            self._name = kwargs[name]  # name of this instance
-        elif name == None:
+        self._name = kwargs.get['name','IGPIO_RPI']
+        self._log_level = kwargs.get['log_level',LOG_LEVEL] # Level of information
+        
+        if type(self._name) != str:
             pass
+        
+
+        #self.__ed = ED(name='Error_GPIO',log_level=self._log_level) # Error handling
             
-        self._log_level = log_level # Level of information
         """ARtibutes"""
         self._error_msg = WORKING # Indicate that the intance is worling fine.
         GPIO.setmode(GPIO.BOARD)
-        self._pins[26]
+        #self._pins[26]
 
     
     def gpio_setup(self,pin=8,io='OUTPUT',pull_up_down='DOWN'):

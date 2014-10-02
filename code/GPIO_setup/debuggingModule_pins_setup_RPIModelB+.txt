@@ -1,0 +1,83 @@
+#-----------------------------------------------------------------------------------------------------------------------------------------
+#Administration Details
+#-----------------------------------------------------------------------------------------------------------------------------------------
+#author : Mats Larsen
+#copyright : Mats Larsen 2014
+#credits : [Mats Larsen]
+#license : GPLv3
+#maintainer : "Mats Larsen"
+#email : "larsen.mats.87@gmail.com"
+#status : "Development"
+#description : This file contains the PIN mapping of the Raspberry Pi(RBI) Model B+. The Pins are connected to a given hardware, see hardware version below. This file can be loaded by software to setup the PIN #mapping. 
+#file : debugging_module_.txt
+#-----------------------------------------------------------------------------------------------------------------------------------------
+#Version
+#-----------------------------------------------------------------------------------------------------------------------------------------
+version_stage : Pre_alpha
+version_number : 0.1
+version_date : 20140917
+version_risk : This current version is in Pre-alpha version, which meaning that the program can crash or perform other unrespected behavoiurs.
+version_modification : The development project has just been created."
+version_next_update : Test of GPIO
+#-----------------------------------------------------------------------------------------------------------------------------------------
+#Hardware
+#-----------------------------------------------------------------------------------------------------------------------------------------
+hardware_version_name : Debruggings_Module
+hardware_version_number : 0.1
+hardware_version_date : 20140917
+hardware_version_risk : This current version is in Pre-alpha version, which meaning that the program can crash or perform other unrespected behavoiurs.
+hardware_version_modification : The development project has just been created."
+hardware_version_next_update : Test of GPIO
+hardware_description : This hardware is designed to debug a tracker
+#-----------------------------------------------------------------------------------------------------------------------------------------
+# Mapping
+#-----------------------------------------------------------------------------------------------------------------------------------------
+# Artibutes:
+# - Name -> the name of a given PIN(Not unik).
+# - ID -> The unik ID for the given PIN.
+# - Propterties -> Descripts the property of this PIN. More properties is noted with a ',' between each property.
+# - State -> Defines the states that the PIN can be in. The states are 'Ilde', 'Busy' and 'Resevered'. Ilde is when the PIN is free and just waiting to be used. Busy is when the PIN is taken 
+# and can't be used by a second operation. Reservered is when the PIN is reservered for another purpose, therefore it can be used.
+# - Operation description -> Descriptes the operation of the PIN seen in the big picture of the system. 
+#------------------------------------------------------------------------------------------------------------------------------------------
+# Name				: ID		: Properties		: State		: Operation description
+#------------------------------------------------------------------------------------------------------------------------------------------
+Power_Supply_3.3V		: PIN_1		: PowerSupply		: Busy 		: Support MUX 1,2 and 3 with power supply at 3.3V.
+Power_Supply_5.0V		: PIN_2		: PowerSupply		: Ilde		: None.
+MUX_SELECT_2			: PIN_3  	: GPIO02,SDA0(I2C)	: Busy 		: One of the selects pins(2) for the MUX_SELECTs.
+Power_Supply_5.0V		: PIN_4		: PowerSupply		: Ilde		: None.
+MUX_SELECT_3 			: PIN_5 	: GPIO3,SCL0(I2C) 	: Busy 		: One of the selects pins(3) for the MUX_SELECTs.
+GND				: PIN_6		: GND			: Ilde		: None.
+MUX Output 3_2 			: PIN_7 	: GPIO4,GPCLK0		: Busy 		: Second output from MUX74_3.
+Uart0_TXD  			: PIN_8		: GPIO14,TX(Uart0)	: Busy		: Transmit the data over Uart0 module.
+GND 	   			: PIN_9		: GND 			: Busy 		: GND which is connected to GND of MUX 1,2 and 3.
+Uart0_RXD  			: PIN_10	: GPIO15,RX(Uart0)	: Busy		: Receive the data over Uart0 module.
+MUX74_Output_2_2 		: PIN_11 	: GPIO17,GPIO_GEN0	: Busy 		: Second output from MUX74_2.
+MUX74_Output_3_1 		: PIN_12 	: GPIO18,GPIO_GEN1	: Busy 		: First output from MUX74_3.
+MUX74_SO			: PIN_13	: GPIO27,GPIO_GEN2	: Busy		: First of two select pins(SO) for MUX74 1,2 and 3.
+GND 	   			: PIN_14	: GND 			: Ilde 		: None.
+MUX74_S1			: PIN_15	: GPIO_22,GPIO_GEN3	: Busy		: Second of two select pins(S1) for MUX74 1,2 and 3.
+MUX74_Output_1_1 		: PIN_16 	: GPIO23,GPIO_GEN4	: Busy 		: First output from MUX74_1.
+Power Supply 3.3V 		: PIN_17 	: PowerSupply		: Ilde 		: None.
+MUX74_Output_1_2 		: PIN_18 	: GPIO24,GPIO_GEN5	: Busy 		: Second output from MUX74_1.
+Tracker_SPI_0_MOSI		: PIN_19	: GPIO10,MOSI(SPI0)	: Busy		: Transmit the data to the tracker controlled by the SPI0 module.
+GND 	   			: PIN_20	: GND 			: Ilde 		: None
+Tracker_SPI_0_MISO		: PIN_21	: GPIO19,MISO(SPI0)	: Busy		: Receive the data from the tracker controlled by the SPI0 module.
+MUX74_Output_2_1 		: PIN_22 	: GPIO25,GPIO_GEN6	: Busy 		: First output from MUX74_2.
+Tracker_SPI_0_SCLK		: PIN_23	: GPIO11,SCLK(SPI0)	: Busy		: The controlled clock, that control the interaction between the tracker and the debruggningModule.
+Tracker_SPI_0_enable		: PIN_24	: GPIO8,CE0_N(SPI0)	: Busy		: The enable bit for the SPI module at the tracker.
+GND 	   			: PIN_25	: GND 			: Busy 		: Connects the debuggning module to the tracker, meaning that the tracker and module have the same ground.
+	""			: PIN_27  	: ID_SD,IC2_ID_EEPROM	: ilde 		: ""
+	""			: PIN_28  	: ID_SC,IC2_ID_EEPROM	: ilde 		: ""
+	""			: PIN_29  	: GPIO05		: ilde 		: ""
+GND				: PIN_30  	: GND			: ilde 		: ""
+	""			: PIN_31  	: GPIO06		: ilde 		: ""
+	""			: PIN_32  	: GPIO12		: ilde 		: ""
+	""			: PIN_33  	: GPIO13		: ilde 		: ""
+GND				: PIN_34  	: GND			: ilde 		: ""
+	""			: PIN_35  	: GPIO19		: ilde 		: ""
+	""			: PIN_36  	: GPIO16		: ilde 		: ""
+	""			: PIN_37  	: GPIO26		: ilde 		: ""
+	""			: PIN_38  	: GPIO20		: ilde 		: ""
+GND				: PIN_39  	: GND			: ilde 		: ""
+	""			: PIN_40  	: GPIO21		: ilde 		: ""

@@ -15,6 +15,7 @@ __status__ = "Development"
 from gpio import I_GPIO # Import the libray to the GPIO interface
 from msg import DisplayMsg as DM
 import traceback
+import os
 #--------------------------------------------------------------------
 #CONSTANTS
 #--------------------------------------------------------------------
@@ -37,5 +38,6 @@ def log(msg, log_level=LOG_LEVEL):
     if log_level <= LOG_LEVEL:
         print(str(log_level) + ' : ' + FILE + '.py::' + traceback.extract_stack()[-2][2] + ' : ' + msg)
 log_level = 2
-setup_file = '/GPIO_setup/debuggingModule_pins_setup.txt'
+setup_file = os.path.join(os.path.expanduser('~'), 'github', 'RaspberryGPIO_Python','code','GPIO_setup', 'debuggingModule_pins_setup_RPIModelB+.txt')
+
 igpio = I_GPIO(setup_file=setup_file,name='test_GPIO',log_level=log_level)
