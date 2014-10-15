@@ -4,7 +4,7 @@ Module for class to handle Raspberry Pi GPIO. It is the interface to the psysica
 #--------------------------------------------------------------------
 #Administration Details
 #--------------------------------------------------------------------
-__author__ = "Mats Larse"
+__author__ = "Mats Larsen"
 __copyright__ = "Mats Larsen 2014"
 __credits__ = ["Mats Larsen"]
 __license__ = "GPLv3"
@@ -32,8 +32,10 @@ __version_next_update__ = "Implementation of connection."
 #--------------------------------------------------------------------
 #from error_display import ErrorDislay as ED # Library to display errors
 import RPi.GPIO as GPIO # to rasperberry gpio library
-import traceback
+import traceback # module to extrat, format and print stack traces of python programs
 import os.path # Platform-independent manipulation of file names
+from msg import DisplayMsg as DM # import displayhandler
+from loadfile import LoadFile as LF # import load file class
 #--------------------------------------------------------------------
 #CONSTANTS
 #--------------------------------------------------------------------
@@ -45,8 +47,10 @@ GPIO_RISING = 'GPIO_RISING'
 GPIO_FALLING = 'GPIO_FALLING'
 GPIO_BOTH = 'GPIO_BOTH'
 
+PIN_STATE = ['Ilde', 'Busy']
+
 """ Error Messages """
-WORKING = 'The intance of the ' + CLASS + ' is working without any problems and warings!!'
+WORKING = 'The intance of the ' + __class__ + ' is working without any problems and warings!!'
 #--------------------------------------------------------------------
 #METHODS
 #--------------------------------------------------------------------
@@ -59,9 +63,9 @@ def log(msg, log_level=LOG_LEVEL):
     """
     global LOG_LEVEL
     if log_level <= LOG_LEVEL:
-        print(str(log_level) + ' : ' + FILE + '.py::' + traceback.extract_stack()[-2][2] + ' : ' + msg)
+        print(str(log_level) + ' : ' + __file__ + '.py::' + traceback.extract_stack()[-2][2] + ' : ' + msg)
 
-class I_GPIO(object):
+class BaseGPIO(object):
     """
     Class for handling properties of the GPIO's.
     """
@@ -69,13 +73,37 @@ class I_GPIO(object):
         """
         This class contain the data for a specific GPIO, e.q. if the GPIO is busy or not.
         """
-        def __init__(self,name,operation):
+        def __init__(self,name,gpio_id,properties,state,io,pull,operation):
             """
             Constructor of the GPIO Data.
             """
             self._name = name # Name of the given GPIO.
-            self._ilde = True # True is when the GPIO is in use.
+            self._id = gpio_id # ID of the gpio
+            self._properties = properties # The properties of the gpio
+            self._state = state # True is when the GPIO is in use.
+            self._io = io # IO configuration of the gpio
+            self._pull = pull #Pull configration of the pin.
             self._operation = operation # A description of the GPIO
+            
+        def get_name(self):
+            """
+            Return the name of the PIN.
+            """
+            return self._name
+
+        def set_name(self,name):
+            """
+            Set new name of the PIN.
+            """
+            self._name = name
+        name = property(get_name,set_name,doc='Name Property')
+
+        def __repr__(self):
+            """
+            Print the reprenstation this intance.
+            """
+            return '"{sdsd}"'.format(self.name)
+
 
     def __init__(self,setup_file=None,**kwargs):
         """
@@ -84,36 +112,59 @@ class I_GPIO(object):
         name-> Str : Describe the name of the instance.
         """
         #Argument assignment
-        
-        self._name = kwargs.get['name','IGPIO_RPI']
-        self._log_level = kwargs.get['log_level',LOG_LEVEL] # Level of information
+        if setup_file != None and type(setup_file) == str:
+            self._setup_file = setup_file
+        else:
+            pass
+
+        self._name = kwargs.get('name','IGPIO_RPI')
+        self._log_level = kwargs.get('log_level',LOG_LEVEL) # Level of information
+
         
         if type(self._name) != str:
             pass
         
+        #innerassignment
+        self._dm = DM()
 
         #self.__ed = ED(name='Error_GPIO',log_level=self._log_level) # Error handling
             
         """ARtibutes"""
         self._error_msg = WORKING # Indicate that the intance is worling fine.
         GPIO.setmode(GPIO.BOARD)
-        #self._pins[26]
+        self._file_gpio = LF(name='File_GPIO',path=self._setup_file,comment='#',col_number=7)
+        
+       
+        log('GPIO is initiliaed')
+    
+    def load_pin_configuration(self):
+        """
+        Load the configuration file.
+        """
+        #set gpio setupts into the gpip layer.
+        self._pins = []
+        load_data = self._file_gpio.data
+        for i in range(0,39):
+            print(load_data[i][1])
+            self._pins.append(self.GPIOData(name=load_data[i][0],gpio_id=load_data[i][1],properties=load_data[i][2],state=load_data[i][3],io=load_data[i][4],pull=load_data[i][5],operation=load_data[i][6]))
+            if load_data[i][3] == PIN_STATE[1]:
+                self.gpio_setup(pin=load_data[i][1],io=load_data[i][4],pull_up_down=load_data[i][5])
 
     
-    def gpio_setup(self,pin=8,io='OUTPUT',pull_up_down='DOWN'):
+    def gpio_setup(self,pin=8,io='OUTPUT',pull_up_down='Pull_DOWN'):
         """
         Set the GPIO up, depended of the pin number and input and ouput option.
         pin : is the number of the pin taken from the boardlayout.
         io : string : is the pin should act as an input or output, [INPUT,OUTPUT]
         pull_up_down : string : Deciding to use either pull-up or pull-down. This option is only possible when a pin is an input channel.
         """
-        if io == 'INPUT' and pull_up_down == 'UP':
+        if io == 'INPUT' and pull_up_down == 'Pull_UP':
             GPIO.setup(pin,GPIO.IN,pull_up_down=GPIO.PUD_UP)
-        elif io == 'INPUT' and pull_up_down == 'DOWN':
+        elif io == 'INPUT' and pull_up_down == 'Pull_DOWN':
             GPIO.setup(pin,GPIO.IN,pull_up_down=GPIO.PUD_DOWN)
-        elif io == 'OUTPUT' and pull_up_down == 'UP':
+        elif io == 'OUTPUT' and pull_up_down == 'Pull_UP':
             GPIO.setup(pin,GPIO.OUT,pull_up_down=GPIO.PUD_UP)
-        elif io == 'OUTPUT' and pull_up_down == 'DOWN':
+        elif io == 'OUTPUT' and pull_up_down == 'Pull_DOWN':
             GPIO.setup(pin,GPIO.OUT,pull_up_down=GPIO.PUD_DOWN)
         else: 
             raise self.Error(
